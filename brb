@@ -28,7 +28,11 @@ def main(fname, keys):
     with open(fname, 'r') as f_:
         las = lasio.read(f_)
 
-    name = sluggify(wellname(las))
+    try:
+        name = sluggify(wellname(las))
+    except:
+        logging.warn('Unable to fetch wellname')
+        name = fname
     df = las.df()
     write(name + '.csv', df, keys)
 
