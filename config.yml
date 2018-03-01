@@ -1,0 +1,89 @@
+DEPTH:
+  - DEPTH
+  - DEPT
+GR:
+  - GRCX
+  - GRCFM
+  - GR
+  - GR/GRMA
+  - DGRCC-T
+GR_UP:
+  - GRCUX
+  - GRCUFM
+GR_DOWN:
+  - GRCDX
+  - GRCDFM
+GR_LEFT:
+  - GRLX
+  - GRCLFM
+GR_RIGHT:
+  - GRCRX
+  - GRCRFM
+RS:
+  - RPCEHX
+  - RPCEHM
+  - P16H
+  - R16PC-T
+RMS:
+  - RPCELX
+  - RPCELM
+  - P28H
+RMD:
+  - RACEHX
+  - RACEHM
+  - P40H
+RD:
+  - RACELX
+  - RACELM
+  - A40H
+  - R39PC-T
+DEN:
+  - BDCX
+  - BDCFM
+  - RHOB_DH
+  - RHOB
+  - ALCDBQ-T
+DENC:
+  - DRHX
+  - DRHFM
+  - DRHO_DH
+  - DRHO
+  - ALDCBQ-T
+DEN_UP:
+  - ABDCUX / ABDC01X
+  - ABDC01M
+  - ROBU
+DEN_DOWN:
+  - ABDCDX / ABDC09X
+  - ABDC09M
+  - ROBB_DH
+  - ROBB
+DEN_LEFT:
+  - ABDCLX / ABDC13X
+  - ABDC13M
+  - ROBL
+DEN_RIGHT:
+  - ABDCRX / ABDC05X
+  - ABDC05M
+  - ROBR
+NEU:
+  - NPKLX
+  - NPCKLFM
+  - TNPH
+  - TNPH
+  - TNPL-T
+CAL:
+  - CALCX
+  - CALCM
+  - UCAV / DCAV
+  - UCHO / UCVE
+SONIC:
+  - DTHX
+  - DTHM
+  - DTRA_DH DTCO
+ECD:
+  - ACTECDX
+  - ACTECDM
+  - ECD
+  - ECD
+  - PWEA-T
