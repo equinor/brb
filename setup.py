@@ -12,7 +12,9 @@ setup(
     author='Software Innovation Bergen, Statoil ASA',
     author_email='fg_gpl@statoil.com',
     description="Everest",
-    scripts=['brb'],
+    packages=['brb'],
+    package_data={'brb':['share/brb_default_header_names.yml']},
+    entry_points={'console_scripts': ['brb = brb.brb:main']},
     install_requires=_requirements,
-    data_files=[('',['share/brb_default_header_names.yml'])]
+    url='https://github.com/statoil/brb',
 )

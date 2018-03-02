@@ -7,6 +7,7 @@ import logging
 import lasio
 import yaml
 import argparse
+import sys
 
 __author__ = 'Software Innovation Bergen, Statoil ASA'
 __version__ = '0.1.0'
@@ -51,41 +52,8 @@ def write(outname, df, keys):
     print('wrote %d rows to %s' % (len(df), outname))
 
 
-def main(args):
-    fname = args.input
-    keys = args.headers
-
-    try:
-        with open(fname, 'r') as f_:
-            las = lasio.read(f_)
-    except Exception as err:
-        exit('Unable to read las file "%s". %s' % (fname, str(err)))
-
-    try:
-        name = _sluggify(wellname(las))
-    except:
-        logging.warn('Unable to fetch wellname')
-        name = fname
-
-    conf = None
-    try:
-        filename = resource_filename(Requirement.parse("brb"),
-                              "brb_default_header_names.yml")
-        with open(filename, 'r') as _f:
-            conf = yaml.load(_f)
-    except Exception as err:
-        logging.warn('Could not read config file: {}'.format(err))
-
-    df = las.df()
-    if conf:
-        df = _standardize_columns(df, conf)
-    write(name + '.csv', df, keys)
-
-
-if __name__ == '__main__':
-    from sys import argv
-
-    parser = argparse.ArgumentParser(prog = argv[0],
+def main():
+    parser = argparse.ArgumentParser(prog = sys.argv[0],
              description = 'brb las file canonizer '
              'brb is a command for reading a las file, canonizing the well '
              'name according to NPD standards, and export a selection of '
@@ -107,8 +75,36 @@ if __name__ == '__main__':
                         help='Header names. The headers follows in a '
                         'space-separated list, e.g.: "--headers RMS GR')
 
-    args = parser.parse_args(args = argv[1:])
+    args = parser.parse_args(args = sys.argv[1:])
 
     if not path_exists(args.input):
         exit('No such file or directory "%s"' % fname)
-    main(args)
+    fname = args.input
+    keys = args.headers
+
+    try:
+        with open(fname, 'r') as f_:
+            las = lasio.read(f_)
+    except Exception as err:
+        exit('Unable to read las file "%s". %s' % (fname, str(err)))
+
+    try:
+        name = _sluggify(wellname(las))
+    except:
+        logging.warn('Unable to fetch wellname')
+        name = fname
+
+    conf = None
+    try:
+        filename = resource_filename(Requirement.parse("brb"),
+                              "brb/share/brb_default_header_names.yml")
+        with open(filename, 'r') as _f:
+            conf = yaml.load(_f)
+    except Exception as err:
+        logging.warn('Could not read config file: {}'.format(err))
+
+    df = las.df()
+    if conf:
+        df = _standardize_columns(df, conf)
+    write(name + '.csv', df, keys)
+
