@@ -14,7 +14,7 @@ __author__ = 'Software Innovation Bergen, Statoil ASA'
 __version__ = '0.1.0'
 
 def _standardize_columns(df, conf):
-    '''Replaces column names in df that has a corresponding default value in
+    """Replaces column names in df that has a corresponding default value in
     the config
 
     Parameters
@@ -25,7 +25,7 @@ def _standardize_columns(df, conf):
            e.g. {'Default': 'Alt1','Alt2'}
     Returns
     df : pandas.DataFrame
-    '''
+    """
     conf = {i: k for k,v in conf.items() for i in v}
     df.columns = [conf.get(k, k) for k in df.columns]
 
