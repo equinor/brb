@@ -5,6 +5,7 @@ from __future__ import print_function
 brb is a command for reading a las file, canonizing the well name according to
 NPD standards, and export a selection of canonically named columns."""
 
+from pkg_resources import Requirement, resource_filename
 from os.path import exists as path_exists
 import logging
 import lasio
@@ -68,7 +69,9 @@ def main(fname, keys):
 
     conf = None
     try:
-        with open('config.yml', 'r') as _f:
+        filename = resource_filename(Requirement.parse("brb"),
+                              "brb_default_header_names.yml")
+        with open(filename, 'r') as _f:
             conf = yaml.load(_f)
     except Exception as err:
         logging.warn('Could not read config file: {}'.format(err))
