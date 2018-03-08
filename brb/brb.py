@@ -1,20 +1,19 @@
 #!/usr/bin/env python
 from __future__ import print_function
-"""brb las file canonizer
 
-brb is a command for reading a las file, canonizing the well name according to
-NPD standards, and export a selection of canonically named columns."""
-
+from pkg_resources import Requirement, resource_filename
 from os.path import exists as path_exists
 import logging
 import lasio
 import yaml
+import argparse
+import sys
 
 __author__ = 'Software Innovation Bergen, Statoil ASA'
 __version__ = '0.1.0'
 
 def _standardize_columns(df, conf):
-    '''Replaces column names in df that has a corresponding default value in
+    """Replaces column names in df that has a corresponding default value in
     the config
 
     Parameters
@@ -25,7 +24,7 @@ def _standardize_columns(df, conf):
            e.g. {'Default': 'Alt1','Alt2'}
     Returns
     df : pandas.DataFrame
-    '''
+    """
     conf = {i: k for k,v in conf.items() for i in v}
     df.columns = [conf.get(k, k) for k in df.columns]
 
@@ -53,7 +52,36 @@ def write(outname, df, keys):
     print('wrote %d rows to %s' % (len(df), outname))
 
 
-def main(fname, keys):
+def main():
+    parser = argparse.ArgumentParser(prog = sys.argv[0],
+             description = 'brb las file canonizer '
+             'brb is a command for reading a las file, canonizing the well '
+             'name according to NPD standards, and export a selection of '
+             'canonically named columns.')
+
+    parser.add_argument('input',
+                        type=str,
+                        help='Input file')
+
+    parser.add_argument('--verbose',
+                        '-v',
+                        action='store_true',
+                        help='verbose output')
+
+    parser.add_argument('--headers',
+                        nargs='+',
+                        default=[],
+                        type=str,
+                        help='Header names. The headers follows in a '
+                        'space-separated list, e.g.: "--headers RMS GR')
+
+    args = parser.parse_args(args = sys.argv[1:])
+
+    if not path_exists(args.input):
+        exit('No such file or directory "%s"' % fname)
+    fname = args.input
+    keys = args.headers
+
     try:
         with open(fname, 'r') as f_:
             las = lasio.read(f_)
@@ -68,7 +96,9 @@ def main(fname, keys):
 
     conf = None
     try:
-        with open('config.yml', 'r') as _f:
+        filename = resource_filename(Requirement.parse("brb"),
+                              "brb/share/brb_default_header_names.yml")
+        with open(filename, 'r') as _f:
             conf = yaml.load(_f)
     except Exception as err:
         logging.warn('Could not read config file: {}'.format(err))
@@ -78,12 +108,3 @@ def main(fname, keys):
         df = _standardize_columns(df, conf)
     write(name + '.csv', df, keys)
 
-
-if __name__ == '__main__':
-    from sys import argv
-    if len(argv) < 2:
-        exit('Usage: brb file.las [KEYS]')
-    fname = argv[1]
-    if not path_exists(fname):
-        exit('No such file or directory "%s"' % fname)
-    main(argv[1], argv[2:])
